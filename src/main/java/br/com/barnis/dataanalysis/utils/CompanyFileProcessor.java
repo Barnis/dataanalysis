@@ -2,9 +2,6 @@ package br.com.barnis.dataanalysis.utils;
 
 import br.com.barnis.dataanalysis.domain.EnumLayoutType;
 import br.com.barnis.dataanalysis.domain.LayoutProcessor;
-import br.com.barnis.dataanalysis.domain.LayoutProcessorSalesman;
-import br.com.barnis.dataanalysis.models.AbstractModel;
-import br.com.barnis.dataanalysis.models.SalesMan;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,9 +53,7 @@ public class CompanyFileProcessor {
         try {
             Path path = Paths.get(environmentConfig.getFullPathReadFilesDirectory());
             Stream<Path> list = Files.list(path);
-            //list.forEach(System.out::println);
             pathList = list.filter(f -> matcher.matches(f.getFileName())).collect(Collectors.toList());
-            //pathList = list.filter(f -> f.endsWith(".dat")).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +76,7 @@ public class CompanyFileProcessor {
 
     private void processFileLine(String fileLine){
 
-        String[] split = fileLine.split("ç");
+        String[] split = fileLine.split(environmentConfig.getFileLineSeparator());
 
         EnumLayoutType enumLayoutType = EnumLayoutType.layoutByCodeId(split[0]);
         LayoutProcessor layoutProcessor = enumLayoutType.returnLayoutProcessor();
@@ -93,7 +88,6 @@ public class CompanyFileProcessor {
     }
 
     public void sendDataToAnalysis(){
-        //CompanyDataAnalyst companyDataAnalyst = new CompanyDataAnalyst();
         companyDataAnalyst.generateAnalysisReport(dataTypeMap);
     }
 }

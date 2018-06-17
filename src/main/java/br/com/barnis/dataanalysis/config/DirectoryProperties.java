@@ -19,6 +19,8 @@ public class DirectoryProperties {
 
     private boolean firstExecution;
 
+    private String fileLineSeparator;
+
     public String getRootFilesDirectoryName() {
         return rootFilesDirectoryName;
     }
@@ -51,7 +53,11 @@ public class DirectoryProperties {
         this.firstExecution = firstExecution;
     }
 
+    public String getFileLineSeparator() {
+        return fileLineSeparator;
+    }
 
-
-
+    public void setFileLineSeparator(String fileLineSeparator) {
+        this.fileLineSeparator = fileLineSeparator;
+    }
 }

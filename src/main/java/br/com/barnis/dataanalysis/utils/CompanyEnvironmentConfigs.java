@@ -32,8 +32,9 @@ public class CompanyEnvironmentConfigs {
 
     private String fullPathWriteFilesDirectory;
 
-
     private boolean isFirstExecution;
+
+    private String fileLineSeparator;
 
 
     @PostConstruct
@@ -47,6 +48,7 @@ public class CompanyEnvironmentConfigs {
         this.fullPathReadFilesDirectory = fullPathRootFilesDirectoryName + FILE_SEPARATOR + directoryProperties.getReadFilesDirectory();
         this.fullPathWriteFilesDirectory = fullPathRootFilesDirectoryName + FILE_SEPARATOR + directoryProperties.getWriteFilesDirectory();
         this.isFirstExecution = directoryProperties.isFirstExecution();
+        this.fileLineSeparator = directoryProperties.getFileLineSeparator();
 
     }
 
@@ -62,8 +64,11 @@ public class CompanyEnvironmentConfigs {
         return fullPathWriteFilesDirectory;
     }
 
-     public boolean isFirstExecution() {
+    public boolean isFirstExecution() {
          return isFirstExecution;
      }
 
+    public String getFileLineSeparator() {
+        return fileLineSeparator;
+    }
 }
