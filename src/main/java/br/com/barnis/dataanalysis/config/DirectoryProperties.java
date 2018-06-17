@@ -2,7 +2,6 @@ package br.com.barnis.dataanalysis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by Barnis Marinho on Junho, 2018
@@ -13,6 +12,12 @@ import org.springframework.stereotype.Component;
 public class DirectoryProperties {
 
     private String rootFilesDirectoryName;
+
+    private String readFilesDirectory;
+
+    private String writeFilesDirectory;
+
+    private boolean firstExecution;
 
     public String getRootFilesDirectoryName() {
         return rootFilesDirectoryName;
@@ -38,9 +43,15 @@ public class DirectoryProperties {
         this.writeFilesDirectory = writeFilesDirectory;
     }
 
-    private String readFilesDirectory;
+    public boolean isFirstExecution(){
+        return this.firstExecution;
+    }
 
-    private String writeFilesDirectory;
+    public void setFirstExecution(boolean firstExecution){
+        this.firstExecution = firstExecution;
+    }
+
+
 
 
 }

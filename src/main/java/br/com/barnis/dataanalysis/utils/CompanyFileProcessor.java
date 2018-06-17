@@ -1,31 +1,44 @@
 package br.com.barnis.dataanalysis.utils;
 
+import br.com.barnis.dataanalysis.domain.EnumLayoutType;
+import br.com.barnis.dataanalysis.domain.LayoutProcessor;
+import br.com.barnis.dataanalysis.domain.LayoutProcessorSalesman;
+import br.com.barnis.dataanalysis.models.AbstractModel;
+import br.com.barnis.dataanalysis.models.SalesMan;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Created by Barnis Marinho on Junho, 2018
  */
+@Component
 public class CompanyFileProcessor {
 
+    @Autowired
     private CompanyEnvironmentConfigs environmentConfig;
 
-    public CompanyFileProcessor(CompanyEnvironmentConfigs environmentConfigs) {
-        this.environmentConfig = environmentConfigs;
+    @Autowired
+    private CompanyDataAnalyst companyDataAnalyst;
+
+    private Map<String, List> dataTypeMap = new HashMap<>();
+
+    public CompanyFileProcessor() {
+
     }
 
     public void processReadDirectoryFiles() {
@@ -60,18 +73,27 @@ public class CompanyFileProcessor {
             String[] split = s.split(System.getProperty("line.separator"));
             List<String> fileLines = Arrays.asList(split);
             fileLines.forEach(this::processFileLine);
+            sendDataToAnalysis();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void processFileLine(String fileLine){
+
         String[] split = fileLine.split("ç");
-        String idLayout = "001";
-        if(idLayout.equals(split[0])){
-            System.out.println("Vai popular um layout de dados do cliente");
-        }
 
+        EnumLayoutType enumLayoutType = EnumLayoutType.layoutByCodeId(split[0]);
+        LayoutProcessor layoutProcessor = enumLayoutType.returnLayoutProcessor();
+        layoutProcessor.process(split);
+        layoutProcessor.obtainModel();
 
+        dataTypeMap.put(layoutProcessor.getLayoutCode(),layoutProcessor.obtainModel());
+
+    }
+
+    public void sendDataToAnalysis(){
+        //CompanyDataAnalyst companyDataAnalyst = new CompanyDataAnalyst();
+        companyDataAnalyst.generateAnalysisReport(dataTypeMap);
     }
 }
